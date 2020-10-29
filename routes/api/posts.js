@@ -33,6 +33,25 @@ router.get('/:id', (req, res) => {
         })
 })
 
+router.get('/:id/comments', (req, res) => {
+    Post.findById(req.params.id)
+        .then((data) => {
+           if (data.length !== 0) {
+               Post.findPostComments(req.params.id)
+                   .then((data) => {
+                       res.status(200).json(data)
+                   })
+                   .catch((data) => {
+                       res.status(500).json({ err: 'The comments could be found'})
+                   })
+           } else {
+               res.status(404).json({
+                   err: ""
+               })
+           }
+        })
+})
+
 router.post('/', (req, res) => {
     Post.insert(req.body)
         .then(post => {
